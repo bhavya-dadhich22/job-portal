@@ -1,12 +1,11 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import Hero from "./Hero";
-import Navbar from "./navbar";
+import Hero from "./hero";
 import dayjs from "dayjs";
-import JobDummyData from "./JobDummyData";
+import JobDummyData from '../../data/JobDummyData'
 const Home = () => {
   return (
     <>
-      <Navbar />
       <Hero />
       <SearchBar />
       {JobDummyData?.map((job) => {
@@ -76,7 +75,7 @@ function JobCard(props) {
   console.log(diffindays)
   return (
     <div className="mx-40 mb-4">
-      <div className="flex justify-between items-center px-6 py-4 bg-zinc-200 rounded-md border-black shadow-lg  hover:translate-y-1 hover:scale-105">
+      <div className="flex justify-between items-center px-6 py-4 bg-zinc-200 rounded-md border-black shadow-lg  ">
         <div className="flex flex-col intems-start gap-3">
           <h1 className="text-lg font-semibold ">
             {props?.title} -{props?.company}{" "}
@@ -98,8 +97,14 @@ function JobCard(props) {
         </div>
         <div className="flex items-center gap-4">
           <p className="text-gray-500">Posted {diffindays} ago</p>
+          <a href='/job/123'>
+
+            <button  className="text-blue-500 border border-blue-500  hover:duration-150 px-10 py-2 rounded-md">
+              Learn More
+            </button>
+          </a>
           <a href={props.job_link}>
-            <button className="text-blue-500 border border-blue-500 px-10 py-2 rounded-md">
+            <button className="text-blue-500 border border-blue-500 bg-blue-500  text-white hover:duration-150 px-10 py-2 rounded-md">
               Apply
             </button>
           </a>
