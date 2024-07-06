@@ -3,7 +3,6 @@ import Home from "./main/components/Home/home";
 import Login from "./main/components/Auth/login";
 import Signup from "./main/components/Auth/signup";
 import { Toaster } from "react-hot-toast";
-
 const App = () => {
   return (
     <>
