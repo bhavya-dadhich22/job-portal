@@ -47,4 +47,4 @@ contact details. just add field i wil chnage later..
 5.2 add table may be same as provios and update fields..y like usernmae ,user exp, buttons  reject accept applciation....
 6.done ...will finsih at last....continue till then.. ill close ok
 */}
-{/* Make desgin responsive */}
+// {/* Make desgin responsive ..i wont do this ....?not able to i tried a lot ...its css or tailwincd css..i used css but still i was not working for it idk why 

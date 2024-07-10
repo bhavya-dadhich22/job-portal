@@ -6,7 +6,7 @@ function Navbar() {
   const [isLoggedIn, ] = useState(false);
 
   return (
-    <header className="flex items-center justify-between w-full text-white  py-4 px-6">
+    <header className="flex items-center justify-between w-full text-black  py-4 px-6">
       <div className="flex items-center gap-4">
         <div className="text-3xl font-bold">JobHive</div>
         <div className="text-3xl font-bold">
@@ -31,7 +31,7 @@ function Navbar() {
           <ul className="flex items-center gap-6 text-sm">
             <li>
               <a
-                className="text-white transition hover:text-white"
+                className="text-black transition hover:text-black"
                 href="#"
               >
                 About
@@ -39,7 +39,7 @@ function Navbar() {
             </li>
             <li>
               <a
-                className="text-white transition hover:text-white"
+                className="text-black transition hover:text-black"
                 href="#"
               >
                 Careers
@@ -47,7 +47,7 @@ function Navbar() {
             </li>
             <li>
               <a
-                className="text-white transition hover:text-white"
+                className="text-black transition hover:text-black"
                 href="#"
               >
                 History
@@ -55,7 +55,7 @@ function Navbar() {
             </li>
             <li>
               <a
-                className="text-white transition hover:text-white"
+                className="text-black transition hover:text-black"
                 href="#"
               >
                 Services
@@ -63,7 +63,7 @@ function Navbar() {
             </li>
             <li>
               <a
-                className="text-white transition hover:text-white"
+                className="text-black transition hover:text-black"
                 href="#"
               >
                 Projects
@@ -79,7 +79,7 @@ function Navbar() {
           <div className="flex items-center gap-4">
             <div className="sm:flex sm:gap-4">
               <a
-                className="rounded-md bg-blue-500 px-5 py-2.5 text-sm font-medium text-white shadow"
+                className="rounded-md bg-blue-700 px-5 py-2.5 text-sm font-medium text-black shadow"
                 href="/login"
               >
                 Login

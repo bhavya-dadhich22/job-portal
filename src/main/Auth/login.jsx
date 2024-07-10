@@ -43,7 +43,7 @@ const Login = () => {
         setLoader(true);
         const type = isUser ? "user" : "company";
         const res = await axios.post(
-          "https://api-jobhunter.vercel.app/api/auth/login",
+          "https://1ob.vercel.app/api/auth/login",
           { email, password, type }
         );
         const { error, message } = res.data;
@@ -75,7 +75,7 @@ const Login = () => {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-300"
+                className="block text-sm font-medium text-black-300"
               >
                 Email
               </label>
@@ -97,7 +97,7 @@ const Login = () => {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-gray-300"
+                className="block text-sm font-medium text-black-300"
               >
                 Password
               </label>
@@ -116,7 +116,7 @@ const Login = () => {
               </div>
             </div>
 
-            <div className="flex items-center justify-between text-gray-300">
+            <div className="flex items-center justify-between text-black-300">
               <p className="text-sm">
                 No account?
                 <a

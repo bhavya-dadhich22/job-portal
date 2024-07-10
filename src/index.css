@@ -5,7 +5,9 @@
 
 @layer base {
   body {
-    background: linear-gradient(to right, rgb(15, 23, 42), rgb(88, 28, 135), rgb(15, 23, 42));
+    background: linear-gradient(to left,gray,slate);
+    color: black;
+    /* background: linear-gradient(to right, rgb(15, 23, 42), rgb(88, 28, 135), rgb(15, 23, 42)); */
   }
 }
 
@@ -51,6 +53,3 @@
 .read-the-docs {
   color: #888;
 }
-
-/* all css here */
-

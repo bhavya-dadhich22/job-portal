@@ -1,20 +1,41 @@
+/* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
+import axios from "axios";
+import React, { useState, useEffect } from "react";
 import Hero from "./hero";
 import dayjs from "dayjs";
-import JobDummyData from '../../data/JobDummyData'
+import useServer from "../hooks/useServer";
+import { Link } from "react-router-dom";
 const Home = () => {
+  const Server = useServer();
+  const [jobs, setJobs] = useState([]);
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(`${Server}/user/getall`);
+      setJobs(response.data.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <>
       <Hero />
       <SearchBar />
-      {JobDummyData?.map((job) => {
-        return <JobCard key={job.id} {...job} />;
+      {jobs?.map((job) => {
+        return (
+          <div key={job.id}>
+            <JobCard {...job} />;
+          </div>
+        );
       })}
     </>
   );
 };
-
 export default Home;
 
 function SearchBar() {
@@ -32,7 +53,6 @@ function SearchBar() {
           <option value="Android Developer">Android Developer</option>
           <option value="Developer Advocate">Developer Advocate</option>
         </select>
-
         <select className="flex flex-col items-start justify-start w-64 py-3 pl-8 bg-zinc-200 font-semibold rounded-md">
           <option values="" hidden>
             {" "}
@@ -43,14 +63,12 @@ function SearchBar() {
           <option value="Part Time">Part Time</option>
           <option value="Contract">Contract</option>
         </select>
-
         <select className="flex flex-col items-start justify-start w-64 py-3 pl-8 bg-zinc-200 font-semibold rounded-md">
           <option values=""> Location</option>
           <option value="Full Time">In-office</option>
           <option value="Part Time">Hybrid</option>
           <option value="Contract">Remote</option>
         </select>
-
         <select className="flex flex-col items-start justify-start w-64 py-3 pl-8 bg-zinc-200 font-semibold rounded-md">
           <option values=" " hidden>
             {" "}
@@ -60,19 +78,16 @@ function SearchBar() {
           <option value="Part Time">Junior level</option>
           <option value="Contract">Senior level</option>
         </select>
-        <button className="w-64 bg-blue-500 text-white font-bold py-3 rounded-md">
+        <button className="w-64 bg-blue-500 text-black font-bold py-3 rounded-md">
           Search
         </button>
       </div>
     </div>
   );
 }
-
 function JobCard(props) {
-  const skill = ["Javascript ", "React ", "Nodejs"];
   const date1 = dayjs(props?.postedOn);
   const diffindays = date1.diff(Date.now(), "day");
-  console.log(diffindays)
   return (
     <div className="mx-40 mb-4">
       <div className="flex justify-between items-center px-6 py-4 bg-zinc-200 rounded-md border-black shadow-lg  ">
@@ -97,17 +112,16 @@ function JobCard(props) {
         </div>
         <div className="flex items-center gap-4">
           <p className="text-gray-500">Posted {diffindays} ago</p>
-          <a href='/job/123'>
-
-            <button  className="text-blue-500 border border-blue-500  hover:duration-150 px-10 py-2 rounded-md">
+          <Link to={`/job/${props._id}`}>
+            <button className="text-blue-500 border border-blue-500  hover:duration-150 px-10 py-2 rounded-md">
               Learn More
             </button>
-          </a>
-          <a href={props.job_link}>
-            <button className="text-blue-500 border border-blue-500 bg-blue-500  text-white hover:duration-150 px-10 py-2 rounded-md">
+          </Link>
+          <Link to={`/job/${props._id}`}>
+            <button className=" border border-blue-500 bg-blue-500  text-black hover:duration-150 px-10 py-2 rounded-md">
               Apply
             </button>
-          </a>
+          </Link>
         </div>
       </div>
     </div>

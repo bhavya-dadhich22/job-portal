@@ -72,7 +72,7 @@ const Signup = () => {
         setLoader(true);
         console.log(type)
         const res = await axios.post(
-          "https://api-jobhunter.vercel.app/api/auth/register",
+          "https://1ob.vercel.app/api/auth/register",
           { name, type, email, password }
         );
         const { error, message } = res.data;
@@ -104,7 +104,7 @@ const Signup = () => {
             <div>
               <label
                 htmlFor="name"
-                className="block text-sm font-medium text-gray-300"
+                className="block text-sm font-medium text-black-300"
               >
                 Name
               </label>
@@ -126,7 +126,7 @@ const Signup = () => {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-300"
+                className="block text-sm font-medium text-black-300"
               >
                 Email
               </label>
@@ -148,7 +148,7 @@ const Signup = () => {
             <div>
               <label
                 htmlFor="phone"
-                className="block text-sm font-medium text-gray-300"
+                className="block text-sm font-medium text-black-300"
               >
                 Phone Number
               </label>
@@ -170,7 +170,7 @@ const Signup = () => {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-gray-300"
+                className="block text-sm font-medium text-black-300"
               >
                 Password
               </label>
@@ -189,7 +189,7 @@ const Signup = () => {
               </div>
             </div>
 
-            <div className="flex items-center justify-between text-gray-300">
+            <div className="flex items-center justify-between text-black-300">
               <p className="text-sm">
                 Already have an account?
                 <a
