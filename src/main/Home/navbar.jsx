@@ -16,28 +16,28 @@ function Navbar() {
 
   const Logout = async () => {
     try {
-      const res = await fetch(`${Server}/logout`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({ token }),
-        withCredentials: true,
-      });
-      const resData = await res.json();
-      toast.success(resData.message);
+      // const res = await fetch(`${Server}/logout`, {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   credentials: 'include',
+      //   body: JSON.stringify({ token }),
+      //   withCredentials: true,
+      // });
+      // const resData = await res.json();
+      // toast.success(resData.message);
       removeCookie('token');
       setTimeout(() => {
         window.location.href = '/';
       }, 1000);
     } catch (error) {
-      console.log(error);
-      if (error?.response?.data?.message) {
-        return toast.error(error?.response?.data?.message);
-      } else {
-        return toast.error("Internal Server Error");
-      }
+      // console.log(error);
+      // if (error?.response?.data?.message) {
+      //   return toast.error(error?.response?.data?.message);
+      // } else {
+      //   return toast.error("Internal Server Error");
+      // }
     }
   }
 
