@@ -1,44 +1,22 @@
 
 import { useAuthUser } from '../zustand/useAuth';
-import useServer from '../hooks/useServer';
 import toast from 'react-hot-toast';
 import { Link } from "react-router-dom";
-import useToken from '../hooks/useToken'
 import { useCookies } from 'react-cookie';
 
 
 
 function Navbar() {
   const { AuthUser } = useAuthUser()
-  const Server = useServer();
-  const token = useToken()
-  const [ removeCookie] = useCookies(['token']);
 
-  const Logout = async () => {
-    try {
-      // const res = await fetch(`${Server}/logout`, {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   credentials: 'include',
-      //   body: JSON.stringify({ token }),
-      //   withCredentials: true,
-      // });
-      // const resData = await res.json();
-      // toast.success(resData.message);
-      removeCookie('token');
-      setTimeout(() => {
-        window.location.href = '/';
-      }, 1000);
-    } catch (error) {
-      // console.log(error);
-      // if (error?.response?.data?.message) {
-      //   return toast.error(error?.response?.data?.message);
-      // } else {
-      //   return toast.error("Internal Server Error");
-      // }
-    }
+  const [cookies, setCookie, removeCookie] = useCookies(['token']);
+
+  const Logout = () => {
+    removeCookie('token');
+    toast.success('Logout Success');
+    setTimeout(() => {
+      window.location.href = '/';
+    }, 1000);
   }
 
   return (
