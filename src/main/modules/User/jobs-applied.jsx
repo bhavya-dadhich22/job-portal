@@ -3,11 +3,13 @@ import useServer from "../../hooks/useServer";
 import toast from 'react-hot-toast'
 import { Link } from 'react-router-dom'
 import { formatDistanceToNow } from 'date-fns'
+import useToken from "../../hooks/useToken";
 
 const AppliedJobsPage = () => {
     const Server = useServer();
     const [loading, setLoading] = useState(false);
     const [AppliedJob, setAppliedJob] = useState([]);
+    const token = useToken();
 
 
 
@@ -15,11 +17,14 @@ const AppliedJobsPage = () => {
         try {
             setLoading(true);
             const res = await fetch(`${Server}/user/applied/`, {
-                method: 'GET',
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 credentials: 'include',
+                body: JSON.stringify({
+                    token
+                }),
                 withCredentials: true,
             });
             const resData = await res.json();
@@ -30,9 +35,9 @@ const AppliedJobsPage = () => {
             setAppliedJob(data);
         } catch (error) {
             if (error?.response?.data?.message) {
-                toast.error(error?.response?.data?.message);   
+                toast.error(error?.response?.data?.message);
             } else {
-                 toast.error("Failed to fetch Data");
+                toast.error("Failed to fetch Data");
             }
         } finally {
             setLoading(false);

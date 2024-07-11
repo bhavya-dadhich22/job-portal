@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import useServer from "../hooks/useServer";
 import toast from "react-hot-toast";
 import { useAuthUser } from "../zustand/useAuth";
+import useToken from "../hooks/useToken";
 
 const JobDetails = () => {
   const [isApplied, setIsApplied] = useState(false);
@@ -13,7 +14,7 @@ const JobDetails = () => {
   const [jobData, setJobData] = useState(null);
   const applied = JSON.parse(localStorage.getItem('apply') || '[]');
   const navigate = useNavigate();
-
+  const token=useToken();
   useEffect(() => {
     const checkIfApplied = () => {
       if (applied.includes(jobId)) {
@@ -36,6 +37,7 @@ const JobDetails = () => {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
+     
         withCredentials: true,
       });
       const resData = await res.json();
@@ -69,6 +71,7 @@ const JobDetails = () => {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
+        body:JSON.stringify({token}),
         withCredentials: true,
       });
       const resData = await res.json();

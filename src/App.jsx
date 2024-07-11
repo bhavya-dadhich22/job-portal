@@ -18,21 +18,25 @@ import Dashboard from './main/modules/Emp/dashboard'
 import CreateJobForm from "./main/modules/Emp/add-job";
 import Applications from './main/modules/Emp/applications'
 import AboutApplication from './main/modules/Emp/appli-about'
+import { useCookies } from "react-cookie";
+import useToken from "./main/hooks/useToken";
 
 
 const App = () => {
   const { setAuthUser, AuthUser } = useAuthUser();
   const Server = useServer();
+  const token = useToken();
 
 
   const fetchData = useCallback(async () => {
 
     const res = await fetch(`${Server}/profile`, {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       credentials: 'include',
+      body: JSON.stringify({token}),
       withCredentials: true,
     });
     const resData = await res.json();

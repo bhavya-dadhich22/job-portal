@@ -3,6 +3,7 @@ import Modal from "react-modal";
 import toast from "react-hot-toast";
 import useServer from "../hooks/useServer";
 import { useAuthUser } from '../zustand/useAuth';
+import useToken from "../hooks/useToken";
 
 const Profile = () => {
   const [isUser, setIsUser] = useState(true);
@@ -11,16 +12,18 @@ const Profile = () => {
   const [loader, setLoader] = useState(false);
   const [userData, setUserData] = useState(null);
   const { setAuthUser, AuthUser } = useAuthUser();
+  const token = useToken();
 
   const fetchData = useCallback(async () => {
     try {
       setLoader(true);
       const res = await fetch(`${Server}/profile`, {
-        method: 'GET',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
+        body: JSON.stringify({ token }),
         withCredentials: true,
       });
       const resData = await res.json();
@@ -72,14 +75,27 @@ const Profile = () => {
 
   const handleSave = async () => {
     try {
-      const res = await fetch(`${Server}/emp/updateinfo`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(updateModal),
-      });
+      let res;
+      if (AuthUser.type == 'user') {
+
+        res = await fetch(`${Server}/user/updateinfo`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify({ updateModal, token }),
+        });
+      } else {
+        res = await fetch(`${Server}/emp/updateinfo`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify({ updateModal, token }),
+        });
+      }
       const resData = await res.json();
       const { error, message } = resData;
       if (error) {
@@ -93,7 +109,6 @@ const Profile = () => {
       toast.error("Failed to update profile");
     }
   };
-
   return (
     <>
       {loader ? (
@@ -257,6 +272,47 @@ const Profile = () => {
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               />
             </label>
+            <label className="block mb-2 text-sm font-medium text-gray-900">
+            githubProfile:
+              <input
+                type="text"
+                name="githubProfile"
+                value={updateModal?.userInfo?.githubProfile || ""}
+                onChange={handleInputChange}
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              />
+            </label>
+            <label className="block mb-2 text-sm font-medium text-gray-900">
+            linkedInProfile:
+              <input
+                type="text"
+                name="linkedInProfile"
+                value={updateModal?.userInfo?.linkedInProfile || ""}
+                onChange={handleInputChange}
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              />
+            </label>
+            <label className="block mb-2 text-sm font-medium text-gray-900">
+            resumeUrl:
+              <input
+                type="text"
+                name="resumeUrl"
+                value={updateModal?.userInfo?.resumeUrl || ""}
+                onChange={handleInputChange}
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              />
+            </label>
+            <label className="block mb-2 text-sm font-medium text-gray-900">
+            address:
+              <input
+                type="text"
+                name="address"
+                value={updateModal?.userInfo?.address || ""}
+                onChange={handleInputChange}
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              />
+            </label>
+
           </>
         ) : (
           <>

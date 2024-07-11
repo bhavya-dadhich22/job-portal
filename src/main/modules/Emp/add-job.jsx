@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import useServer from "../../hooks/useServer";
+import useToken from '../../hooks/useToken'
 
 const CreateJobForm = () => {
     const Server = useServer();
+    const token=useToken()
     const [jobData, setJobData] = useState({
         title: "",
         description: "",
@@ -41,6 +43,7 @@ const CreateJobForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoader(true);
+        console.log(jobData);
         try {
             const res = await fetch(`${Server}/emp/create`, {
                 method: "POST",
@@ -48,7 +51,7 @@ const CreateJobForm = () => {
                     "Content-Type": "application/json",
                 },
                 credentials: "include",
-                body: JSON.stringify(jobData),
+                body: JSON.stringify({jobData,token}),
             });
             const resData = await res.json();
             const { error, message, data } = resData;

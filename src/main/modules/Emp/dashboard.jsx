@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import Modal from "react-modal";
 import useServer from '../../hooks/useServer'
 import toast from 'react-hot-toast'
+import useToken from "../../hooks/useToken";
 
 
 
@@ -13,16 +14,18 @@ const Dashboard = () => {
   const Server = useServer();
   const [loader, setLoader] = useState(false)
   const [jobs, setJobs] = useState([]);
+  const token = useToken();
 
   const fetchData = useCallback(async () => {
     try {
       setLoader(true);
       const res = await fetch(`${Server}/emp/posted`, {
-        method: 'GET',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
+        body: JSON.stringify({ token }),
         withCredentials: true,
       });
       const resData = await res.json();
@@ -53,7 +56,7 @@ const Dashboard = () => {
     setIsModalOpen(true);
   };
 
-  const handleDelete = async(id) => {
+  const handleDelete = async (id) => {
     console.log(id);
     try {
       setLoader(true);
@@ -62,6 +65,7 @@ const Dashboard = () => {
         headers: {
           'Content-Type': 'application/json',
         },
+        body: JSON.stringify({ token }),
         credentials: 'include',
         withCredentials: true,
       });
@@ -70,8 +74,8 @@ const Dashboard = () => {
       if (error) {
         return toast.error(message);
       }
-    console.log(data);
-    fetchData();
+      console.log(data);
+      fetchData();
     } catch (error) {
       console.log(error);
       if (error?.response?.data?.message) {
@@ -101,11 +105,11 @@ const Dashboard = () => {
   const SaveUpdate = async () => {
     try {
       console.log(selectedJob);
-      if(!selectedJob) return toast.error('failed');
+      if (!selectedJob) return toast.error('failed');
       setLoader(true);
       const res = await fetch(`${Server}/emp/update/${selectedJob?._id}`, {
         method: 'PUT',
-        body: JSON.stringify( selectedJob ),
+        body: JSON.stringify({ selectedJob, token }),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -117,9 +121,9 @@ const Dashboard = () => {
       if (error) {
         return toast.error(message);
       }
-    console.log(data);
-    setSelectedJob(null)
-    fetchData();
+      console.log(data);
+      setSelectedJob(null)
+      fetchData();
     } catch (error) {
       console.log(error);
       if (error?.response?.data?.message) {

@@ -56,20 +56,16 @@ const Login = () => {
           , credentials: 'include',
         });
         const resData = await res.json();
-        const { error, message, type: userType, token } = resData;
-        console.log(token);
-        // setCookie('token', token);
+        const { error, message, type: userType ,token} = resData;
         if (error) {
           return toast.error(message);
         }
-
+        setCookie('token',token);
         toast.success(message);
         setTimeout(() => {
           userType == 'company' ?
-            nav('/dashboard') :
-            nav('/')
-          // window.location.href = '/dashboard' :
-          // window.location.href = '/';
+            window.location.href = '/dashboard' :
+            window.location.href = '/';
         }, 2000);
       } catch (error) {
         if (error?.response?.data?.message) {

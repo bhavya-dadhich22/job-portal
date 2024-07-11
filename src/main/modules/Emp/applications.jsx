@@ -3,22 +3,25 @@ import toast from 'react-hot-toast';
 import useServer from '../../hooks/useServer';
 import AboutApplications from "./appli-about";
 import { formatDistanceToNow } from "date-fns";
+import useToken from '../../hooks/useToken'
 
 const Applications = () => {
     const Server = useServer();
     const [loader, setLoader] = useState(false);
     const [applications, setApplications] = useState([]);
     const [ApplicationDetail, setApplicationDetail] = useState(null)
+    const token=useToken();
 
     const fetchData = useCallback(async () => {
         try {
             setLoader(true);
             const res = await fetch(`${Server}/emp/applications`, {
-                method: 'GET',
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 credentials: 'include',
+                body:JSON.stringify({token}),
                 withCredentials: true,
             });
             const resData = await res.json();
@@ -49,7 +52,7 @@ const Applications = () => {
 
 
 
-    console.log(applications[0]);
+    console.log(applications);
     return (
         <>
             {
@@ -70,18 +73,18 @@ const Applications = () => {
                         <tbody>
                             {applications?.map((application, index) => (
                                 <tr key={index} className="">
-                                    <td className="px-6 py-4 whitespace-nowrap">{application.jobId.title}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap">{application.jobId.companyName}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap">{new Date(application.jobId.postedAt).toLocaleDateString()}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap">{application?.jobId?.title}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap">{application?.jobId?.companyName}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap">{new Date(application?.jobId?.postedAt).toLocaleDateString()}</td>
                                     <td >
                                         <span className={` whitespace-nowrap  px-4 py-1 rounded-full
-                        ${application.status == 'Accept' ? 'bg-green-400' : 'bg-red-300'}
+                        ${application?.status == 'Accept' ? 'bg-green-400' : 'bg-red-300'}
                         `}>
 
-                                            {application.status}
+                                            {application?.status}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">{getRelativeTime(application.appliedAt)}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap">{getRelativeTime(application?.appliedAt)}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <button
                                             onClick={() => setApplicationDetail(application)}
