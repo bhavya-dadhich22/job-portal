@@ -18,7 +18,6 @@ import Dashboard from './main/modules/Emp/dashboard'
 import CreateJobForm from "./main/modules/Emp/add-job";
 import Applications from './main/modules/Emp/applications'
 import AboutApplication from './main/modules/Emp/appli-about'
-import { useCookies } from "react-cookie";
 import useToken from "./main/hooks/useToken";
 
 
@@ -26,6 +25,7 @@ const App = () => {
   const { setAuthUser, AuthUser } = useAuthUser();
   const Server = useServer();
   const token = useToken();
+
 
 
   const fetchData = useCallback(async () => {
