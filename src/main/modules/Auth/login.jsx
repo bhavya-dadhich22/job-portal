@@ -2,6 +2,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import Toggle from "../../components/widgets/toggle";
 import useServer from '../../hooks/useServer'
+import { useCookies } from "react-cookie";
 
 const Login = () => {
   const Server = useServer();
@@ -11,6 +12,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [cookies, setCookie] = useCookies(['token']);
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -53,7 +55,9 @@ const Login = () => {
           , credentials: 'include',
         });
         const resData = await res.json();
-        const { error, message, type: userType } = resData;
+        const { error, message, type: userType, token } = resData;
+        console.log(token);
+        setCookie('token', token);
         if (error) {
           return toast.error(message);
         }
@@ -61,6 +65,7 @@ const Login = () => {
         toast.success(message);
         setTimeout(() => {
           userType == 'company' ?
+
             window.location.href = '/dashboard' :
             window.location.href = '/';
         }, 2000);
