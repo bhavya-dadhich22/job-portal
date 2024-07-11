@@ -3,13 +3,14 @@ import { useAuthUser } from '../zustand/useAuth';
 import useServer from '../hooks/useServer';
 import toast from 'react-hot-toast';
 import { Link } from "react-router-dom";
+import useToken from '../hooks/useToken'
 
 
 
 function Navbar() {
   const { AuthUser } = useAuthUser()
   const Server = useServer();
-
+  const token = useToken()
 
   const Logout = async () => {
     try {
@@ -19,6 +20,7 @@ function Navbar() {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
+        body: JSON.stringify({token}),
         withCredentials: true,
       });
       const resData = await res.json();
