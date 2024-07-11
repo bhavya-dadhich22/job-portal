@@ -1,38 +1,72 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Hero from "./hero";
 import dayjs from "dayjs";
 import useServer from "../hooks/useServer";
 import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
 const Home = () => {
   const Server = useServer();
+  const [loader, setLoader] = useState(false)
   const [jobs, setJobs] = useState([]);
-  const fetchData = async () => {
+  const applied = JSON.parse(localStorage.getItem('apply') || '[]');
+
+  const fetchData = useCallback(async () => {
     try {
-      const response = await axios.get(`${Server}/user/getall`);
-      setJobs(response.data.data);
+      setLoader(true);
+      const res = await fetch(`${Server}/user/getall`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        withCredentials: true,
+      });
+      const resData = await res.json();
+      const { error, message, data } = resData;
+      if (error) {
+        return toast.error(message);
+      }
+      const check = data.map((item, i) => {
+        const appliedOrNot = applied.find((id) => id === item._id);
+        if (appliedOrNot) {
+          item.applied = true;
+          return item
+        }
+        else return item
+      })
+      setJobs(check);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.log(error);
+      if (error?.response?.data?.message) {
+        return toast.error(error?.response?.data?.message);
+      } else {
+        return toast.error("Failed to fetch Data");
+      }
+    } finally {
+      setLoader(false);
     }
-  };
+  }, [Server]);
+
   useEffect(() => {
     fetchData();
-  }, []);
-
+  }, [fetchData]);
   return (
     <>
       <Hero />
       <SearchBar />
-      {jobs?.map((job) => {
-        return (
-          <div key={job.id}>
-            <JobCard {...job} />;
-          </div>
-        );
-      })}
+
+      {
+        loader ? <h1 className=" text-xl py-10">Fetching Jobs....</h1> :
+          jobs?.map((job) => {
+            return (
+              <div key={job._id}>
+                <JobCard {...job} />;
+              </div>
+            );
+          })}
     </>
   );
 };
@@ -40,7 +74,7 @@ export default Home;
 
 function SearchBar() {
   return (
-    <div className="flex flex-col items-start justify-start   p-8">
+    <div className="flex flex-col    p-8">
       <div className="flex space-x-4">
         <select className="flex flex-col items-start justify-start w-64 py-3 pl-4 bg-zinc-200 font-semibold rounded-md">
           <option value="" hidden>
@@ -118,8 +152,9 @@ function JobCard(props) {
             </button>
           </Link>
           <Link to={`/job/${props._id}`}>
-            <button className=" border border-blue-500 bg-blue-500  text-black hover:duration-150 px-10 py-2 rounded-md">
-              Apply
+            <button disabled={props?.applied} className=" border border-blue-500 bg-blue-500  disabled:bg-gray-400 text-black hover:duration-150 px-10 py-2 rounded-md">
+              {props.applied ? 'Already applied' : 'Apply'}
+
             </button>
           </Link>
         </div>

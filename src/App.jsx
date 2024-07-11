@@ -3,48 +3,100 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import Navbar from "./main/Home/navbar";
 import Home from "./main/Home/home";
-import Login from "./main/Auth/login";
-import Signup from "./main/Auth/signup";
+import Login from "./main/modules/Auth/login";
+import Signup from "./main/modules/Auth/signup";
 import Footer from "./main/Home/footer";
 import Profile from "./main/Home/profile";
-import AppliedJobsPage from "./main/User/jobs-applied";
-import JobsPostedPage from "./main/Emp/jobs-posted";
+import AppliedJobsPage from "./main/modules/User/jobs-applied";
+import JobsPostedPage from "./main/modules/Emp/jobs-posted";
 import JobDetails from "./main/Home/job-details";
+import { useCallback, useEffect } from "react";
+import { useAuthUser } from "./main/zustand/useAuth";
+import useServer from "./main/hooks/useServer";
+import Notfound from '../src/main/components/404'
+import Dashboard from './main/modules/Emp/dashboard'
+import CreateJobForm from "./main/modules/Emp/add-job";
+import Applications from './main/modules/Emp/applications'
+import AboutApplication from './main/modules/Emp/appli-about'
+
 
 const App = () => {
+  const { setAuthUser, AuthUser } = useAuthUser();
+  const Server = useServer();
+
+
+  const fetchData = useCallback(async () => {
+
+    const res = await fetch(`${Server}/profile`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      withCredentials: true,
+    });
+    const resData = await res.json();
+    const { data } = resData;
+    if (data)
+      setAuthUser(data);
+
+  }, [Server, setAuthUser]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+
+
   return (
     <>
       <BrowserRouter>
-        <Toaster />
+        <Toaster
+          position="bottom-center"
+          toastOptions={{
+            className: '  mb-5',
+            style: {
+              background: '#363636',
+              color: '#fff',
+            },
+          }}
+        />
         <Navbar />
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
+          {
+            AuthUser?.type != 'company' &&
+            <Route path="/" element={<Home />} />
+          }
+          {
+
+            !AuthUser &&
+            <>
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+            </>
+          }
+          {
+            AuthUser?.type == 'company' &&
+            <>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/add-job" element={<CreateJobForm />} />
+              <Route path="/applications" element={<Applications />} />
+              <Route path="/applications/details" element={<AboutApplication />} />
+
+            </>
+          }
+
           <Route path="/profile" element={<Profile />} />
-          {/* profile page for both same desgin no need of seperate designs...i wil add dynamic data */}
           <Route path="/user/applied" element={<AppliedJobsPage />} />
-          {/* for users to see list of jobs they applied */}
           <Route path="/emp/jobs" element={<JobsPostedPage />} />
           <Route path="/job/:jobId" element={<JobDetails />} />
+          <Route path="/*" element={<Notfound />} />
         </Routes>
         <Footer />
-      </BrowserRouter>
+      </BrowserRouter >
     </>
   );
 };
 
 export default App;
 
-
-{/* 1.Done
-2.u need to design 2nd one..just do some desgin for adding edution exp etc..also create for company information and
-contact details. just add field i wil chnage later..
-3.almost done..add the fields they mentioned in 3rd one-->
-4.done may add some filter u can add copy paste or sefin uselef
-
-5.1 Need to create page whre it desiply about a jonb like info company details more deatils...Will redirct to this page when user click leanr more on application...
-5.2 add table may be same as provios and update fields..y like usernmae ,user exp, buttons  reject accept applciation....
-6.done ...will finsih at last....continue till then.. ill close ok
-*/}
-// {/* Make desgin responsive ..i wont do this ....?not able to i tried a lot ...its css or tailwincd css..i used css but still i was not working for it idk why 

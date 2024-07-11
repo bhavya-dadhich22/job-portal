@@ -1,11 +1,12 @@
-import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import Toggle from "../components/widgets/toggle";
+import Toggle from "../../components/widgets/toggle";
+import useServer from '../../hooks/useServer'
 
 const Login = () => {
+  const Server = useServer();
   const [loader, setLoader] = useState(false);
-  const [isUser, setIsUser] = useState(false);
+  const [isUser, setIsUser] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
@@ -42,15 +43,27 @@ const Login = () => {
       try {
         setLoader(true);
         const type = isUser ? "user" : "company";
-        const res = await axios.post(
-          "https://1ob.vercel.app/api/auth/login",
-          { email, password, type }
-        );
-        const { error, message } = res.data;
+
+        const res = await fetch(`${Server}/auth/login`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, password, type })
+          , credentials: 'include',
+        });
+        const resData = await res.json();
+        const { error, message, type: userType } = resData;
         if (error) {
           return toast.error(message);
         }
+
         toast.success(message);
+        setTimeout(() => {
+          userType == 'company' ?
+            window.location.href = '/dashboard' :
+            window.location.href = '/';
+        }, 2000);
       } catch (error) {
         if (error?.response?.data?.message) {
           return toast.error(error?.response?.data?.message);

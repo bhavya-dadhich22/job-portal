@@ -1,9 +1,12 @@
 import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import Toggle from "../components/widgets/toggle";
+import Toggle from "../../components/widgets/toggle";
+import useServer from '../../hooks/useServer'
 
 const Signup = () => {
+
+  const Server = useServer();
   const [loader, setLoader] = useState(false);
   const [isUser, setIsUser] = useState(false);
   const [name, setName] = useState("");
@@ -64,7 +67,7 @@ const Signup = () => {
     }
 
     if (valid) {
-    
+
       try {
         const type = isUser ? "user" : "company";
         if (!email || !password || !type || !name)
@@ -72,7 +75,7 @@ const Signup = () => {
         setLoader(true);
         console.log(type)
         const res = await axios.post(
-          "https://1ob.vercel.app/api/auth/register",
+          `${Server}/auth/register`,
           { name, type, email, password }
         );
         const { error, message } = res.data;

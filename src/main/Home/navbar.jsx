@@ -1,85 +1,120 @@
-import  { useState } from 'react';
-// import { FaGithub } from 'react-icons/fa';
+
+import { useAuthUser } from '../zustand/useAuth';
+import useServer from '../hooks/useServer';
+import toast from 'react-hot-toast';
+import { Link } from "react-router-dom";
+
+
 
 function Navbar() {
-  // Placeholder for authentication state
-  const [isLoggedIn, ] = useState(false);
+  const { AuthUser } = useAuthUser()
+  const Server = useServer();
+
+
+  const Logout = async () => {
+    try {
+      const res = await fetch(`${Server}/logout`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        withCredentials: true,
+      });
+      const resData = await res.json();
+      toast.success(resData.message);
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 1000);
+    } catch (error) {
+      console.log(error);
+      if (error?.response?.data?.message) {
+        return toast.error(error?.response?.data?.message);
+      } else {
+        return toast.error("Internal Server Error");
+      }
+    }
+  }
 
   return (
     <header className="flex items-center justify-between w-full text-black  py-4 px-6">
       <div className="flex items-center gap-4">
-        <div className="text-3xl font-bold">JobHive</div>
-        <div className="text-3xl font-bold">
-          <a
-            target="_blank"
-            href="https://github.com/vrindaBindal2712/job-portal"
-            rel="noreferrer"
-          >
-            {/* <FaGithub size={20} /> */}
-          </a>
-        </div>
+        <Link to={AuthUser?.type == 'company' ? '/dashboard' : '/'} className="text-3xl font-bold">JobHive</Link>
+
       </div>
       <div className="flex items-center justify-between w-full">
         <div className="flex-1 md:flex md:items-center md:gap-12">
-          <a className="block text-blue-600" href="#">
+          <a className="block text-blue-600" href="/">
             <span className="sr-only">Home</span>
-            
-          </a>
-        </div> 
 
-        <nav aria-label="Global" className="hidden md:block">
+          </a>
+        </div>
+
+        <nav aria-label="Global" className="hidden md:block mx-10">
           <ul className="flex items-center gap-6 text-sm">
-            <li>
-              <a
-                className="text-black transition hover:text-black"
-                href="#"
-              >
-                About
-              </a>
-            </li>
-            <li>
-              <a
-                className="text-black transition hover:text-black"
-                href="#"
-              >
-                Careers
-              </a>
-            </li>
-            <li>
-              <a
-                className="text-black transition hover:text-black"
-                href="#"
-              >
-                History
-              </a>
-            </li>
-            <li>
-              <a
-                className="text-black transition hover:text-black"
-                href="#"
-              >
-                Services
-              </a>
-            </li>
-            <li>
-              <a
-                className="text-black transition hover:text-black"
-                href="#"
-              >
-                Projects
-              </a>
-            </li>
-            <li>
-              
-            </li>
+            {
+              AuthUser?.type == 'user' &&
+              <li>
+                <Link
+                  className="text-black transition hover:text-black"
+                  to="/user/applied"
+                >
+                  Applied
+                </Link>
+              </li>
+            }
+            {
+              AuthUser?.type == 'company' &&
+              <li>
+                <Link
+                  className="text-black transition hover:text-black"
+                  to="/dashboard"
+                >
+                  Dashboard
+                </Link>
+              </li>
+            }
+            {
+              AuthUser?.type == 'company' &&
+              <>
+                <li>
+                  <Link
+                    className="text-black transition hover:text-black"
+                    to="/add-job"
+                  >
+                    Add Job
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    className="text-black transition hover:text-black"
+                    to="/applications"
+                  >
+                    View Applications
+                  </Link>
+                </li>
+              </>
+            }
+            {
+              AuthUser &&
+              <li>
+                <Link
+                  className="text-black transition hover:text-black"
+                  to="/profile"
+                >
+                  Profile
+                </Link>
+              </li>
+            }
+
           </ul>
         </nav>
 
-        {!isLoggedIn && (
+        {!AuthUser ? (
           <div className="flex items-center gap-4">
             <div className="sm:flex sm:gap-4">
               <a
-                className="rounded-md bg-blue-700 px-5 py-2.5 text-sm font-medium text-black shadow"
+                className="rounded-md bg-blue-700 px-5 text-white py-2.5 text-sm font-medium  shadow"
                 href="/login"
               >
                 Login
@@ -87,7 +122,7 @@ function Navbar() {
 
               <div className="hidden sm:flex">
                 <a
-                  className="rounded-md bg-gray-100 px-5 py-2.5 text-sm font-medium text-black"
+                  className="rounded-md bg-gray-100  px-5 py-2.5 text-sm font-medium "
                   href="/signup"
                 >
                   Register
@@ -95,7 +130,15 @@ function Navbar() {
               </div>
             </div>
           </div>
-        )}
+        ) :
+          <button
+            onClick={Logout}
+            className="rounded-md bg-gray-100 px-5  py-2.5 text-sm  "
+          >
+            Logout
+          </button>
+
+        }
       </div>
     </header>
   );
